@@ -187,7 +187,7 @@ app = workflow.compile(checkpointer=memory)
 config = {"configurable": {"user_id": "1", "thread_id": "1"}}
 text_contents = "Tu chat:"
 save_chat = ""
-st.header('Chatbot H1071 ')
+st.header('Chatbot MA1028 ')
 st.write(bot_template.replace("{{MSG}}", "Hola, estoy aquí para ayudarte, ¿Cómo te llamas?"), unsafe_allow_html=True)
 question = st.chat_input("Escribe la pregunta y tu respuesta")
 if question:
