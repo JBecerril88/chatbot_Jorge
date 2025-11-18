@@ -99,6 +99,16 @@ system_prompt = (
     "\n\n"
     "{context}"
 )
+system_prompt2 = (
+    "Este documento contiene informacion para ayudar a los estudiantes con la actividad de Sumas de Riemann."
+    "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
+    "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
+    "Dale pistas y guıas, pero no copies directamente el codigo o las soluciones completas."
+    "Anima al estudiante a pensar y construir la solucion por sı mismo."
+    "Si un estudiante esta completamente perdido, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
+    "\n\n"
+    "{context}"
+)
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
@@ -176,7 +186,7 @@ app = workflow.compile(checkpointer=memory)
 config = {"configurable": {"user_id": "1", "thread_id": "1"}}
 text_contents = "Tu chat:"
 save_chat = ""
-st.header('Chatbot MA1028 ')
+st.header('Chatbot MA1028 - Guía Integración')
 st.write(bot_template.replace("{{MSG}}", "Hola, estoy aquí para ayudarte, ¿Cómo te llamas?"), unsafe_allow_html=True)
 question = st.chat_input("Escribe la pregunta y tu respuesta")
 if question:
