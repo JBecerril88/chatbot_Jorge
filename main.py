@@ -41,11 +41,6 @@ from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 #from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 
-# Importa la herramienta de carga de texto
-from langchain.document_loaders import TextLoader 
-#from langchain.text_splitter import CharacterTextSplitter # Recomendado para .tex
-#from langchain_community.document_loaders import UnstructuredMarkdownLoader
-
 import os
 
 load_dotenv()
@@ -65,62 +60,26 @@ embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 #Load documents
 
-def load_db(embeddings, path: str):
-    """
-    Carga el contenido del archivo .tex, lo divide en chunks y crea un vectorstore FAISS.
-
-    Args:
-        embeddings: El objeto de embeddings (GoogleGenerativeAIEmbeddings).
-        path (str): La ruta al archivo .tex.
-    """
-    
-    # 1. Cargar el archivo .tex usando TextLoader
-    # TextLoader lee el archivo como texto plano, ignorando la estructura PDF.
-    #loader = UnstructuredMarkdownLoader(path)
-    loader = TextLoader(path, encoding="utf8")
-    
-    # El método load() devuelve una lista de objetos 'Document'
-    documents = loader.load()
-
-    # 2. Inicializar el segmentador de texto
-    # El RecursiveCharacterTextSplitter intentará dividir por párrafos y saltos de línea
-    # (que es una buena aproximación para código LaTeX con saltos de línea lógicos)
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000, 
-        chunk_overlap=150,
-        separators=["\n\n", "\n", " "]
-    )
-    
-    # 3. Dividir los documentos en chunks
-    # documents es una lista de documentos, split_documents divide esos documentos
-    texts = text_splitter.split_documents(documents)
-
-    # 4. Crear el Vectorstore FAISS
-    # Usamos FAISS.from_documents ya que 'texts' ahora contiene objetos Document de LangChain
-    vectorstore = FAISS.from_documents(texts, embeddings)
-    
-    return vectorstore
-
-# def load_db(embeddings, path):
-#    text =''
+ def load_db(embeddings, path):
+    text =''
 
     #with open(path,'rb') as file:
     #    pdf_reader = PdfReader(file)
     #    for page in pdf_reader.pages:
     #        text += page.extract_text()
     #        print(text)
-#    with pdfplumber.open(path) as pdf:
-#        for page in pdf.pages:
-#            text += page.extract_text()
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text()
 
-#    #text_splitter = SemanticChunker(embeddings, breakpoint_threshold_type="percentile")
-#    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-#    docs = text_splitter.split_text(text)
-#    vectorstore = FAISS.from_texts(docs, embeddings)
-#    return vectorstore
+    #text_splitter = SemanticChunker(embeddings, breakpoint_threshold_type="percentile")
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+    docs = text_splitter.split_text(text)
+    vectorstore = FAISS.from_texts(docs, embeddings)
+    return vectorstore
 
 if not os.path.exists('faiss_index'):
-    vectorstore=load_db(embeddings,'chatbot_guia4.md') # <- cambiar embedding
+    vectorstore=load_db(embeddings,'guia_chatbot_riemann.pdf') # <- cambiar embedding
     vectorstore.save_local("faiss_index")
 else:
     vectorstore = FAISS.load_local("faiss_index",embeddings=embeddings,allow_dangerous_deserialization=True)
@@ -145,19 +104,9 @@ system_prompt = (
     "\n\n"
     "{context}"
 )
-system_prompt2 = (
-    "Este documento contiene informacion para ayudar a los estudiantes con la solución a su guia de integrales."
-    "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
-    "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
-    "Usa las directivas de ayuda que se describe al inicio del archivo."
-    "Anima al estudiante a pensar y construir la solucion por sı mismo."
-    "Si un estudiante esta completamente perdido, y ya le diste 4 sugerencias o mas, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
-    "\n\n"
-    "{context}"
-)
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt2), # <- cambiar prompt
+        ("system", system_prompt), # <- cambiar prompt
         ("human", "{input}"),
     ]
 )
@@ -187,7 +136,7 @@ history_aware_retriever = create_history_aware_retriever(
 
 qa_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt2), # <- cambiar prompt
+        ("system", system_prompt), # <- cambiar prompt
         MessagesPlaceholder("chat_history"),
         ("human", "{input}"),
     ]
