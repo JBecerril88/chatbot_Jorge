@@ -45,13 +45,12 @@ import os
 
 load_dotenv()
 
-api_key= os.getenv('GROQ_API_KEY')
+#api_key= os.getenv('GROQ_API_KEY')
 google_key=os.getenv('GOOGLE_API_KEY')
-# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 
+#llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
-
-# llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
+#llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
 
 embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
