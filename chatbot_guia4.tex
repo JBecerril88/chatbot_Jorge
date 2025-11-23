@@ -1,0 +1,671 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\decimalpoint
+\usepackage{setspace}
+\usepackage{cite}
+\usepackage{enumitem}
+\usepackage{anysize}
+\usepackage{bookmark}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\marginsize{1.5cm}{1.5cm}{1.5cm}{1.5cm}
+\date{}
+
+\newcommand{\pista}[1]{\textcolor{blue}{\textbf{Pista:} #1}}
+\newcommand{\paso}[1]{\textcolor{teal}{\textbf{Paso:} #1}}
+
+\begin{document}
+	
+	\begin{tcolorbox}[colback=yellow!10!white, colframe=orange!75!black, title=Directivas para el Chatbot]
+		\textbf{Instrucciones para el chatbot tutor:}
+		\begin{enumerate}
+			\item \textbf{Nunca proporcionar la respuesta final inmediatamente} - Guiar a los estudiantes a través del proceso de resolución con pistas y preguntas.
+			\item \textbf{Diagnosticar dónde está atascado el estudiante} - Hacer preguntas aclaratorias para identificar su dificultad específica (elegir $u$ y $dv$, álgebra, técnica de integración, etc.).
+			\item \textbf{Proporcionar pistas dirigidas, no soluciones} - Sugerir qué técnica usar, recordar fórmulas o señalar ejemplos similares sin resolver los pasos.
+			\item \textbf{Fomentar el trabajo del estudiante} - Pedirles que muestren su intento, luego guiarlos para encontrar sus propios errores o continuar desde donde se detuvieron.
+			\item \textbf{Usar las soluciones solo como referencia} - Verificar el trabajo del estudiante contra estas soluciones, pero revelar pasos progresivamente y solo cuando el estudiante esté verdaderamente atascado.
+		\end{enumerate}
+	\end{tcolorbox}
+	
+	\vspace{2ex}
+	
+	\begin{center}
+		{\LARGE Guía IV - Soluciones Completas}\par\vspace{1ex}
+		\large Modelación Matemática Fundamental\\
+		\large Profesor: Jorge Antonio Becerril Gómez\\
+		\large Tecnológico de Monterrey
+		\medskip
+		
+		\small Temas: Integración por Partes, Fracciones Parciales\par
+	\end{center}
+	
+	\vspace{3ex}
+	
+	\section*{Integración por Partes}
+	
+	\textbf{Fórmula:} $\displaystyle \int u \, dv = uv - \int v \, du$
+	
+	\begin{enumerate}
+		
+		\item $\displaystyle \int x^2 \cos(2x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Elige $u = x^2$ (polinomio) y $dv = \cos(2x)dx$ (trigonométrica). Recuerda la prioridad ILATE.}
+		
+		\paso{Primera aplicación de integración por partes}
+		\begin{align*}
+			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
+			dv &= \cos(2x) \, dx \quad \Rightarrow \quad v = \frac{1}{2}\sin(2x)
+		\end{align*}
+		
+		\begin{align*}
+			\int x^2 \cos(2x) \, dx &= x^2 \cdot \frac{1}{2}\sin(2x) - \int \frac{1}{2}\sin(2x) \cdot 2x \, dx\\
+			&= \frac{1}{2}x^2 \sin(2x) - \int x\sin(2x) \, dx
+		\end{align*}
+		
+		\paso{Segunda aplicación de integración por partes en $\int x\sin(2x) \, dx$}
+		\begin{align*}
+			u &= x \quad \Rightarrow \quad du = dx\\
+			dv &= \sin(2x) \, dx \quad \Rightarrow \quad v = -\frac{1}{2}\cos(2x)
+		\end{align*}
+		
+		\begin{align*}
+			\int x\sin(2x) \, dx &= x \cdot \left(-\frac{1}{2}\cos(2x)\right) - \int \left(-\frac{1}{2}\cos(2x)\right) \, dx\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{2}\int \cos(2x) \, dx\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{2} \cdot \frac{1}{2}\sin(2x)\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{4}\sin(2x)
+		\end{align*}
+		
+		\paso{Combinando resultados}
+		\begin{align*}
+			\int x^2 \cos(2x) \, dx &= \frac{1}{2}x^2 \sin(2x) - \left[-\frac{1}{2}x\cos(2x) + \frac{1}{4}\sin(2x)\right]\\
+			&= \frac{1}{2}x^2 \sin(2x) + \frac{1}{2}x\cos(2x) - \frac{1}{4}\sin(2x) + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{1}{2}x^2 \sin(2x) + \frac{1}{2}x\cos(2x) - \frac{1}{4}\sin(2x) + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int x^2 e^{-2x} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Polinomio por exponencial: usa $u = x^2$, $dv = e^{-2x}dx$. Necesitarás aplicar integración por partes dos veces.}
+		
+		\paso{Primera aplicación}
+		\begin{align*}
+			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
+			dv &= e^{-2x} \, dx \quad \Rightarrow \quad v = -\frac{1}{2}e^{-2x}
+		\end{align*}
+		
+		\begin{align*}
+			\int x^2 e^{-2x} \, dx &= x^2 \cdot \left(-\frac{1}{2}e^{-2x}\right) - \int \left(-\frac{1}{2}e^{-2x}\right) \cdot 2x \, dx\\
+			&= -\frac{1}{2}x^2 e^{-2x} + \int x e^{-2x} \, dx
+		\end{align*}
+		
+		\paso{Segunda aplicación en $\int x e^{-2x} \, dx$}
+		\begin{align*}
+			u &= x \quad \Rightarrow \quad du = dx\\
+			dv &= e^{-2x} \, dx \quad \Rightarrow \quad v = -\frac{1}{2}e^{-2x}
+		\end{align*}
+		
+		\begin{align*}
+			\int x e^{-2x} \, dx &= x \cdot \left(-\frac{1}{2}e^{-2x}\right) - \int \left(-\frac{1}{2}e^{-2x}\right) \, dx\\
+			&= -\frac{1}{2}x e^{-2x} + \frac{1}{2}\int e^{-2x} \, dx\\
+			&= -\frac{1}{2}x e^{-2x} + \frac{1}{2} \cdot \left(-\frac{1}{2}e^{-2x}\right)\\
+			&= -\frac{1}{2}x e^{-2x} - \frac{1}{4}e^{-2x}
+		\end{align*}
+		
+		\paso{Combinando resultados}
+		\begin{align*}
+			\int x^2 e^{-2x} \, dx &= -\frac{1}{2}x^2 e^{-2x} + \left[-\frac{1}{2}x e^{-2x} - \frac{1}{4}e^{-2x}\right]\\
+			&= -\frac{1}{2}x^2 e^{-2x} - \frac{1}{2}x e^{-2x} - \frac{1}{4}e^{-2x} + C\\
+			&= -\frac{1}{4}e^{-2x}(2x^2 + 2x + 1) + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{-\frac{1}{4}e^{-2x}(2x^2 + 2x + 1) + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int x^2 \ln(2x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Las funciones logarítmicas siempre deben elegirse como $u$ en ILATE. ¿Qué debería ser $dv$?}
+		
+		\paso{Configurar integración por partes}
+		\begin{align*}
+			u &= \ln(2x) \quad \Rightarrow \quad du = \frac{1}{x} \, dx\\
+			dv &= x^2 \, dx \quad \Rightarrow \quad v = \frac{x^3}{3}
+		\end{align*}
+		
+		\paso{Aplicar la fórmula}
+		\begin{align*}
+			\int x^2 \ln(2x) \, dx &= \ln(2x) \cdot \frac{x^3}{3} - \int \frac{x^3}{3} \cdot \frac{1}{x} \, dx\\
+			&= \frac{x^3}{3}\ln(2x) - \frac{1}{3}\int x^2 \, dx\\
+			&= \frac{x^3}{3}\ln(2x) - \frac{1}{3} \cdot \frac{x^3}{3}\\
+			&= \frac{x^3}{3}\ln(2x) - \frac{x^3}{9} + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{x^3}{3}\ln(2x) - \frac{x^3}{9} + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int x e^{-\frac{x}{2}} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Esto requiere solo una aplicación de integración por partes. Elige $u = x$.}
+		
+		\paso{Configuración}
+		\begin{align*}
+			u &= x \quad \Rightarrow \quad du = dx\\
+			dv &= e^{-\frac{x}{2}} \, dx \quad \Rightarrow \quad v = -2e^{-\frac{x}{2}}
+		\end{align*}
+		
+		\paso{Aplicar la fórmula}
+		\begin{align*}
+			\int x e^{-\frac{x}{2}} \, dx &= x \cdot \left(-2e^{-\frac{x}{2}}\right) - \int \left(-2e^{-\frac{x}{2}}\right) \, dx\\
+			&= -2x e^{-\frac{x}{2}} + 2\int e^{-\frac{x}{2}} \, dx\\
+			&= -2x e^{-\frac{x}{2}} + 2 \cdot \left(-2e^{-\frac{x}{2}}\right)\\
+			&= -2x e^{-\frac{x}{2}} - 4e^{-\frac{x}{2}}\\
+			&= -2e^{-\frac{x}{2}}(x + 2) + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{-2e^{-\frac{x}{2}}(x + 2) + C}$ o $\displaystyle \boxed{-2(x+2)e^{-\frac{x}{2}} + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int x^2 \sin(x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Similar al problema 1, pero con $\sin(x)$ en lugar de $\cos(2x)$. Aplica integración por partes dos veces.}
+		
+		\paso{Primera aplicación}
+		\begin{align*}
+			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
+			dv &= \sin(x) \, dx \quad \Rightarrow \quad v = -\cos(x)
+		\end{align*}
+		
+		\begin{align*}
+			\int x^2 \sin(x) \, dx &= x^2 \cdot (-\cos(x)) - \int (-\cos(x)) \cdot 2x \, dx\\
+			&= -x^2 \cos(x) + 2\int x\cos(x) \, dx
+		\end{align*}
+		
+		\paso{Segunda aplicación en $\int x\cos(x) \, dx$}
+		\begin{align*}
+			u &= x \quad \Rightarrow \quad du = dx\\
+			dv &= \cos(x) \, dx \quad \Rightarrow \quad v = \sin(x)
+		\end{align*}
+		
+		\begin{align*}
+			\int x\cos(x) \, dx &= x \sin(x) - \int \sin(x) \, dx\\
+			&= x \sin(x) - (-\cos(x))\\
+			&= x \sin(x) + \cos(x)
+		\end{align*}
+		
+		\paso{Combinando resultados}
+		\begin{align*}
+			\int x^2 \sin(x) \, dx &= -x^2 \cos(x) + 2[x \sin(x) + \cos(x)]\\
+			&= -x^2 \cos(x) + 2x \sin(x) + 2\cos(x) + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{-x^2 \cos(x) + 2x \sin(x) + 2\cos(x) + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int e^x \sin(x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Este es un caso especial donde obtendrás la integral original de vuelta. Usa integración por partes dos veces y resuelve algebraicamente.}
+		
+		\paso{Primera aplicación}
+		\begin{align*}
+			u &= \sin(x) \quad \Rightarrow \quad du = \cos(x) \, dx\\
+			dv &= e^x \, dx \quad \Rightarrow \quad v = e^x
+		\end{align*}
+		
+		\begin{align*}
+			\int e^x \sin(x) \, dx &= \sin(x) \cdot e^x - \int e^x \cos(x) \, dx\\
+			&= e^x \sin(x) - \int e^x \cos(x) \, dx
+		\end{align*}
+		
+		\paso{Segunda aplicación en $\int e^x \cos(x) \, dx$}
+		\begin{align*}
+			u &= \cos(x) \quad \Rightarrow \quad du = -\sin(x) \, dx\\
+			dv &= e^x \, dx \quad \Rightarrow \quad v = e^x
+		\end{align*}
+		
+		\begin{align*}
+			\int e^x \cos(x) \, dx &= \cos(x) \cdot e^x - \int e^x \cdot (-\sin(x)) \, dx\\
+			&= e^x \cos(x) + \int e^x \sin(x) \, dx
+		\end{align*}
+		
+		\paso{Sustituyendo de vuelta}
+		\begin{align*}
+			\int e^x \sin(x) \, dx &= e^x \sin(x) - \left[e^x \cos(x) + \int e^x \sin(x) \, dx\right]\\
+			\int e^x \sin(x) \, dx &= e^x \sin(x) - e^x \cos(x) - \int e^x \sin(x) \, dx
+		\end{align*}
+		
+		\paso{Resolviendo para la integral}
+		\begin{align*}
+			2\int e^x \sin(x) \, dx &= e^x \sin(x) - e^x \cos(x)\\
+			\int e^x \sin(x) \, dx &= \frac{e^x(\sin(x) - \cos(x))}{2} + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{e^x(\sin(x) - \cos(x))}{2} + C}$ o $\displaystyle \boxed{\frac{1}{2}e^x\sin(x) - \frac{1}{2}e^x\cos(x) + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \arcsin(x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Cuando integras funciones inversas solas, usa $u = \arcsin(x)$ y $dv = dx$.}
+		
+		\paso{Configuración}
+		\begin{align*}
+			u &= \arcsin(x) \quad \Rightarrow \quad du = \frac{1}{\sqrt{1-x^2}} \, dx\\
+			dv &= dx \quad \Rightarrow \quad v = x
+		\end{align*}
+		
+		\paso{Aplicar la fórmula}
+		\begin{align*}
+			\int \arcsin(x) \, dx &= \arcsin(x) \cdot x - \int x \cdot \frac{1}{\sqrt{1-x^2}} \, dx\\
+			&= x\arcsin(x) - \int \frac{x}{\sqrt{1-x^2}} \, dx
+		\end{align*}
+		
+		\paso{Evaluar $\int \frac{x}{\sqrt{1-x^2}} \, dx$ usando sustitución}
+		
+		Sea $w = 1-x^2$, entonces $dw = -2x \, dx$, así que $x \, dx = -\frac{1}{2}dw$
+		
+		\begin{align*}
+			\int \frac{x}{\sqrt{1-x^2}} \, dx &= \int \frac{1}{\sqrt{w}} \cdot \left(-\frac{1}{2}\right) \, dw\\
+			&= -\frac{1}{2} \int w^{-\frac{1}{2}} \, dw\\
+			&= -\frac{1}{2} \cdot 2w^{\frac{1}{2}}\\
+			&= -\sqrt{w}\\
+			&= -\sqrt{1-x^2}
+		\end{align*}
+		
+		\paso{Respuesta final}
+		\begin{align*}
+			\int \arcsin(x) \, dx &= x\arcsin(x) - (-\sqrt{1-x^2})\\
+			&= x\arcsin(x) + \sqrt{1-x^2} + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{x\arcsin(x) + \sqrt{1-x^2} + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int_0^1 x \sin(2x) \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Primero encuentra la antiderivada usando integración por partes, luego evalúa en los límites.}
+		
+		\paso{Encontrar antiderivada usando integración por partes}
+		\begin{align*}
+			u &= x \quad \Rightarrow \quad du = dx\\
+			dv &= \sin(2x) \, dx \quad \Rightarrow \quad v = -\frac{1}{2}\cos(2x)
+		\end{align*}
+		
+		\begin{align*}
+			\int x \sin(2x) \, dx &= x \cdot \left(-\frac{1}{2}\cos(2x)\right) - \int \left(-\frac{1}{2}\cos(2x)\right) \, dx\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{2}\int \cos(2x) \, dx\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{2} \cdot \frac{1}{2}\sin(2x)\\
+			&= -\frac{1}{2}x\cos(2x) + \frac{1}{4}\sin(2x)
+		\end{align*}
+		
+		\paso{Evaluar integral definida}
+		\begin{align*}
+			\int_0^1 x \sin(2x) \, dx &= \left[-\frac{1}{2}x\cos(2x) + \frac{1}{4}\sin(2x)\right]_0^1\\
+			&= \left[-\frac{1}{2}(1)\cos(2) + \frac{1}{4}\sin(2)\right] - \left[-\frac{1}{2}(0)\cos(0) + \frac{1}{4}\sin(0)\right]\\
+			&= -\frac{1}{2}\cos(2) + \frac{1}{4}\sin(2) - 0\\
+			&= \frac{1}{4}\sin(2) - \frac{1}{2}\cos(2)
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{1}{4}\sin(2) - \frac{1}{2}\cos(2)}$ o aproximadamente $\boxed{0.0197}$
+		
+		\vspace{2ex}
+		
+		\section*{Integración con Fracciones Parciales}
+		
+		\textbf{Pasos clave para la descomposición en fracciones parciales:}
+		\begin{enumerate}
+			\item Verificar si el grado del numerador $<$ grado del denominador. Si no, realizar división polinomial primero.
+			\item Factorizar el denominador completamente.
+			\item Configurar la forma de fracciones parciales basada en los factores.
+			\item Resolver para las constantes usando varios métodos (cubrir, sustitución, comparar coeficientes).
+			\item Integrar término por término.
+		\end{enumerate}
+		
+		\item $\displaystyle \int \frac{1}{x^2 + x - 2} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Primero factoriza el denominador, luego descompone en fracciones parciales con factores lineales.}
+		
+		\paso{Factorizar denominador}
+		\begin{align*}
+			x^2 + x - 2 = (x+2)(x-1)
+		\end{align*}
+		
+		\paso{Configurar fracciones parciales}
+		\begin{align*}
+			\frac{1}{(x+2)(x-1)} = \frac{A}{x+2} + \frac{B}{x-1}
+		\end{align*}
+		
+		\paso{Resolver para las constantes}
+		\begin{align*}
+			1 = A(x-1) + B(x+2)
+		\end{align*}
+		
+		Método 1 - Sustitución:
+		\begin{itemize}
+			\item Sea $x = 1$: $1 = A(0) + B(3) \Rightarrow B = \frac{1}{3}$
+			\item Sea $x = -2$: $1 = A(-3) + B(0) \Rightarrow A = -\frac{1}{3}$
+		\end{itemize}
+		
+		\paso{Reescribir e integrar}
+		\begin{align*}
+			\int \frac{1}{x^2 + x - 2} \, dx &= \int \left(\frac{-\frac{1}{3}}{x+2} + \frac{\frac{1}{3}}{x-1}\right) \, dx\\
+			&= -\frac{1}{3}\int \frac{1}{x+2} \, dx + \frac{1}{3}\int \frac{1}{x-1} \, dx\\
+			&= -\frac{1}{3}\ln|x+2| + \frac{1}{3}\ln|x-1| + C\\
+			&= \frac{1}{3}\ln\left|\frac{x-1}{x+2}\right| + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{1}{3}\ln\left|\frac{x-1}{x+2}\right| + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{1}{x^3(1-x)} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{El factor $x^3$ es un factor lineal repetido. Necesitas tres términos para él en la descomposición en fracciones parciales.}
+		
+		\paso{Configurar fracciones parciales}
+		\begin{align*}
+			\frac{1}{x^3(1-x)} = \frac{A}{x} + \frac{B}{x^2} + \frac{C}{x^3} + \frac{D}{1-x}
+		\end{align*}
+		
+		\paso{Eliminar denominadores}
+		\begin{align*}
+			1 = Ax^2(1-x) + Bx(1-x) + C(1-x) + Dx^3
+		\end{align*}
+		
+		\paso{Resolver para las constantes usando sustitución}
+		\begin{itemize}
+			\item Sea $x = 0$: $1 = C(1) \Rightarrow C = 1$
+			\item Sea $x = 1$: $1 = D(1) \Rightarrow D = 1$
+			\item Sea $x = -1$: $1 = A(1)(2) + B(-1)(2) + C(2) + D(-1)$
+			
+			$1 = 2A - 2B + 2 - 1 \Rightarrow 2A - 2B = 0 \Rightarrow A = B$
+			\item Sea $x = 2$: $1 = A(4)(-1) + B(2)(-1) + C(-1) + D(8)$
+			
+			$1 = -4A - 2B - 1 + 8 \Rightarrow -4A - 2B = -6$
+			
+			Como $A = B$: $-6A = -6 \Rightarrow A = 1, B = 1$
+		\end{itemize}
+		
+		\paso{Reescribir e integrar}
+		\begin{align*}
+			\int \frac{1}{x^3(1-x)} \, dx &= \int \left(\frac{1}{x} + \frac{1}{x^2} + \frac{1}{x^3} + \frac{1}{1-x}\right) \, dx\\
+			&= \ln|x| - \frac{1}{x} - \frac{1}{2x^2} - \ln|1-x| + C\\
+			&= \ln\left|\frac{x}{1-x}\right| - \frac{1}{x} - \frac{1}{2x^2} + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\ln\left|\frac{x}{1-x}\right| - \frac{1}{x} - \frac{1}{2x^2} + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{x^2 + 1}{x^2 - 1} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{El grado del numerador es igual al grado del denominador. ¿Qué debes hacer primero?}
+		
+		\paso{División polinomial larga}
+		
+		Como el grado del numerador $\geq$ grado del denominador, debemos dividir primero:
+		
+		\begin{align*}
+			\frac{x^2 + 1}{x^2 - 1} = 1 + \frac{2}{x^2 - 1}
+		\end{align*}
+		
+		Verificación: $(x^2 - 1) \cdot 1 + 2 = x^2 - 1 + 2 = x^2 + 1$ ?
+		
+		\paso{Factorizar denominador del residuo}
+		\begin{align*}
+			x^2 - 1 = (x+1)(x-1)
+		\end{align*}
+		
+		\paso{Fracciones parciales en $\frac{2}{x^2-1}$}
+		\begin{align*}
+			\frac{2}{(x+1)(x-1)} = \frac{A}{x+1} + \frac{B}{x-1}
+		\end{align*}
+		
+		\begin{align*}
+			2 = A(x-1) + B(x+1)
+		\end{align*}
+		
+		\begin{itemize}
+			\item Sea $x = 1$: $2 = B(2) \Rightarrow B = 1$
+			\item Sea $x = -1$: $2 = A(-2) \Rightarrow A = -1$
+		\end{itemize}
+		
+		\paso{Integrar}
+		\begin{align*}
+			\int \frac{x^2 + 1}{x^2 - 1} \, dx &= \int \left(1 + \frac{-1}{x+1} + \frac{1}{x-1}\right) \, dx\\
+			&= x - \ln|x+1| + \ln|x-1| + C\\
+			&= x + \ln\left|\frac{x-1}{x+1}\right| + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{x + \ln\left|\frac{x-1}{x+1}\right| + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{x^2 - 2}{x(x^2 + 2)} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Tienes un factor lineal ($x$) y un factor cuadrático irreducible ($x^2 + 2$). Usa las formas apropiadas para cada uno.}
+		
+		\paso{Configurar fracciones parciales}
+		\begin{align*}
+			\frac{x^2 - 2}{x(x^2 + 2)} = \frac{A}{x} + \frac{Bx + C}{x^2 + 2}
+		\end{align*}
+		
+		\paso{Eliminar denominadores}
+		\begin{align*}
+			x^2 - 2 = A(x^2 + 2) + (Bx + C)(x)
+		\end{align*}
+		
+		\paso{Resolver para las constantes}
+		
+		Sea $x = 0$: $-2 = A(2) \Rightarrow A = -1$
+		
+		Expandiendo: $x^2 - 2 = Ax^2 + 2A + Bx^2 + Cx$
+		
+		Comparando coeficientes:
+		\begin{itemize}
+			\item $x^2$: $1 = A + B \Rightarrow B = 1 - (-1) = 2$
+			\item $x^1$: $0 = C \Rightarrow C = 0$
+			\item $x^0$: $-2 = 2A$ ? (confirma $A = -1$)
+		\end{itemize}
+		
+		\paso{Reescribir e integrar}
+		\begin{align*}
+			\int \frac{x^2 - 2}{x(x^2 + 2)} \, dx &= \int \left(\frac{-1}{x} + \frac{2x}{x^2 + 2}\right) \, dx\\
+			&= -\ln|x| + \int \frac{2x}{x^2 + 2} \, dx
+		\end{align*}
+		
+		Para $\int \frac{2x}{x^2 + 2} \, dx$, sea $u = x^2 + 2$, entonces $du = 2x \, dx$:
+		\begin{align*}
+			\int \frac{2x}{x^2 + 2} \, dx = \int \frac{du}{u} = \ln|u| = \ln(x^2 + 2)
+		\end{align*}
+		
+		\paso{Respuesta final}
+		\begin{align*}
+			\int \frac{x^2 - 2}{x(x^2 + 2)} \, dx &= -\ln|x| + \ln(x^2 + 2) + C\\
+			&= \ln\left|\frac{x^2 + 2}{x}\right| + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\ln\left|\frac{x^2 + 2}{x}\right| + C}$ o $\displaystyle \boxed{\ln(x^2+2) - \ln|x| + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{3x + 5}{x^2 - x - 2} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Factoriza el denominador primero, luego usa fracciones parciales con dos factores lineales.}
+		
+		\paso{Factorizar denominador}
+		\begin{align*}
+			x^2 - x - 2 = (x-2)(x+1)
+		\end{align*}
+		
+		\paso{Configurar fracciones parciales}
+		\begin{align*}
+			\frac{3x + 5}{(x-2)(x+1)} = \frac{A}{x-2} + \frac{B}{x+1}
+		\end{align*}
+		
+		\paso{Resolver para las constantes}
+		\begin{align*}
+			3x + 5 = A(x+1) + B(x-2)
+		\end{align*}
+		
+		\begin{itemize}
+			\item Sea $x = 2$: $3(2) + 5 = A(3) \Rightarrow 11 = 3A \Rightarrow A = \frac{11}{3}$
+			\item Sea $x = -1$: $3(-1) + 5 = B(-3) \Rightarrow 2 = -3B \Rightarrow B = -\frac{2}{3}$
+		\end{itemize}
+		
+		\paso{Integrar}
+		\begin{align*}
+			\int \frac{3x + 5}{x^2 - x - 2} \, dx &= \int \left(\frac{\frac{11}{3}}{x-2} + \frac{-\frac{2}{3}}{x+1}\right) \, dx\\
+			&= \frac{11}{3}\ln|x-2| - \frac{2}{3}\ln|x+1| + C\\
+			&= \frac{1}{3}\left[11\ln|x-2| - 2\ln|x+1|\right] + C\\
+			&= \frac{1}{3}\ln\left|\frac{(x-2)^{11}}{(x+1)^2}\right| + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{11}{3}\ln|x-2| - \frac{2}{3}\ln|x+1| + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{2x^2 + 3x + 1}{(x-1)(x^2+4)} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Factores mixtos: uno lineal, uno cuadrático irreducible. Configura las fracciones parciales en consecuencia.}
+		
+		\paso{Configurar fracciones parciales}
+		\begin{align*}
+			\frac{2x^2 + 3x + 1}{(x-1)(x^2+4)} = \frac{A}{x-1} + \frac{Bx + C}{x^2 + 4}
+		\end{align*}
+		
+		\paso{Eliminar denominadores}
+		\begin{align*}
+			2x^2 + 3x + 1 = A(x^2+4) + (Bx + C)(x-1)
+		\end{align*}
+		
+		\paso{Resolver para las constantes}
+		
+		Sea $x = 1$: $2 + 3 + 1 = A(5) \Rightarrow A = \frac{6}{5}$
+		
+		Expandiendo: $2x^2 + 3x + 1 = Ax^2 + 4A + Bx^2 - Bx + Cx - C$
+		
+		Comparando coeficientes:
+		\begin{itemize}
+			\item $x^2$: $2 = A + B \Rightarrow B = 2 - \frac{6}{5} = \frac{4}{5}$
+			\item $x^1$: $3 = -B + C \Rightarrow C = 3 + \frac{4}{5} = \frac{19}{5}$
+			\item $x^0$: $1 = 4A - C \Rightarrow 1 = \frac{24}{5} - \frac{19}{5} = \frac{5}{5}$ ?
+		\end{itemize}
+		
+		\paso{Reescribir e integrar}
+		\begin{align*}
+			\int \frac{2x^2 + 3x + 1}{(x-1)(x^2+4)} \, dx &= \int \left(\frac{\frac{6}{5}}{x-1} + \frac{\frac{4}{5}x + \frac{19}{5}}{x^2 + 4}\right) \, dx\\
+			&= \frac{6}{5}\ln|x-1| + \frac{4}{5}\int \frac{x}{x^2+4} \, dx + \frac{19}{5}\int \frac{1}{x^2+4} \, dx
+		\end{align*}
+		
+		Para $\int \frac{x}{x^2+4} \, dx$: Sea $u = x^2 + 4$, $du = 2x \, dx$
+		\begin{align*}
+			\int \frac{x}{x^2+4} \, dx = \frac{1}{2}\ln(x^2+4)
+		\end{align*}
+		
+		Para $\int \frac{1}{x^2+4} \, dx$: Usa $\int \frac{1}{x^2+a^2} \, dx = \frac{1}{a}\arctan\left(\frac{x}{a}\right)$ con $a = 2$
+		\begin{align*}
+			\int \frac{1}{x^2+4} \, dx = \frac{1}{2}\arctan\left(\frac{x}{2}\right)
+		\end{align*}
+		
+		\paso{Combinar resultados}
+		\begin{align*}
+			\int \frac{2x^2 + 3x + 1}{(x-1)(x^2+4)} \, dx &= \frac{6}{5}\ln|x-1| + \frac{4}{5} \cdot \frac{1}{2}\ln(x^2+4) + \frac{19}{5} \cdot \frac{1}{2}\arctan\left(\frac{x}{2}\right) + C\\
+			&= \frac{6}{5}\ln|x-1| + \frac{2}{5}\ln(x^2+4) + \frac{19}{10}\arctan\left(\frac{x}{2}\right) + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\frac{6}{5}\ln|x-1| + \frac{2}{5}\ln(x^2+4) + \frac{19}{10}\arctan\left(\frac{x}{2}\right) + C}$
+		
+		\vspace{2ex}
+		
+		\item $\displaystyle \int \frac{\sec^2 x}{\tan^2 x+3\tan x+2} \, dx$
+		
+		\textbf{Solución:}
+		
+		\pista{Esto parece complicado, pero observa que $\frac{d}{dx}[\tan x] = \sec^2 x$. ¡Intenta una sustitución!}
+		
+		\paso{Usar sustitución}
+		
+		Sea $u = \tan x$, entonces $du = \sec^2 x \, dx$
+		
+		\begin{align*}
+			\int \frac{\sec^2 x}{\tan^2 x+3\tan x+2} \, dx = \int \frac{1}{u^2 + 3u + 2} \, du
+		\end{align*}
+		
+		\paso{Factorizar denominador}
+		\begin{align*}
+			u^2 + 3u + 2 = (u+1)(u+2)
+		\end{align*}
+		
+		\paso{Fracciones parciales}
+		\begin{align*}
+			\frac{1}{(u+1)(u+2)} = \frac{A}{u+1} + \frac{B}{u+2}
+		\end{align*}
+		
+		\begin{align*}
+			1 = A(u+2) + B(u+1)
+		\end{align*}
+		
+		\begin{itemize}
+			\item Sea $u = -1$: $1 = A(1) \Rightarrow A = 1$
+			\item Sea $u = -2$: $1 = B(-1) \Rightarrow B = -1$
+		\end{itemize}
+		
+		\paso{Integrar}
+		\begin{align*}
+			\int \frac{1}{u^2 + 3u + 2} \, du &= \int \left(\frac{1}{u+1} - \frac{1}{u+2}\right) \, du\\
+			&= \ln|u+1| - \ln|u+2| + C\\
+			&= \ln\left|\frac{u+1}{u+2}\right| + C
+		\end{align*}
+		
+		\paso{Sustituir de vuelta}
+		\begin{align*}
+			\int \frac{\sec^2 x}{\tan^2 x+3\tan x+2} \, dx = \ln\left|\frac{\tan x+1}{\tan x+2}\right| + C
+		\end{align*}
+		
+		\textbf{Respuesta:} $\displaystyle \boxed{\ln\left|\frac{\tan x+1}{\tan x+2}\right| + C}$
+		
+	\end{enumerate}
+	
+\end{document}
