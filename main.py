@@ -49,9 +49,9 @@ api_key= os.getenv('GROQ_API_KEY')
 google_key=os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 
-#embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+#embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 
 #Load documents
@@ -74,7 +74,7 @@ def load_db(embeddings, path):
     return vectorstore
 
 if not os.path.exists('faiss_index'):
-    vectorstore=load_db(embeddings,'chatbot_guia_cambiovariable.pdf') # <- cambiar pdf
+    vectorstore=load_db(embeddings,'chatbot_guia4.pdf') # <- cambiar pdf
     vectorstore.save_local("faiss_index")
 else:
     vectorstore = FAISS.load_local("faiss_index",embeddings=embeddings,allow_dangerous_deserialization=True)
@@ -103,7 +103,7 @@ system_prompt2 = (
     "Este documento contiene informacion para ayudar a los estudiantes con la guia de integrales basicas y cambio de variable."
     "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
     "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
-    "Usa el protocolo de ayuda escalonado que se describe en el pdf."
+    "Usa las directivas de ayuda que se describe al inicio del pdf."
     "Anima al estudiante a pensar y construir la solucion por sı mismo."
     "Si un estudiante esta completamente perdido, y ya le diste 4 sugerencias o mas, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
     "\n\n"
@@ -111,7 +111,7 @@ system_prompt2 = (
 )
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt2),
+        ("system", system_prompt2), # <- cambiar prompt
         ("human", "{input}"),
     ]
 )
@@ -141,7 +141,7 @@ history_aware_retriever = create_history_aware_retriever(
 
 qa_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt2),
+        ("system", system_prompt2), # <- cambiar prompt
         MessagesPlaceholder("chat_history"),
         ("human", "{input}"),
     ]
