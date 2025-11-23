@@ -77,7 +77,7 @@ def load_db(embeddings, path: str):
     # 1. Cargar el archivo .tex usando TextLoader
     # TextLoader lee el archivo como texto plano, ignorando la estructura PDF.
     #loader = UnstructuredMarkdownLoader(path)
-    loader = TextLoader(path)
+    loader = TextLoader(path, encoding="utf8")
     
     # El método load() devuelve una lista de objetos 'Document'
     documents = loader.load()
@@ -87,7 +87,8 @@ def load_db(embeddings, path: str):
     # (que es una buena aproximación para código LaTeX con saltos de línea lógicos)
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000, 
-        chunk_overlap=150
+        chunk_overlap=150,
+        separators=["\n\n", "\n", " "]
     )
     
     # 3. Dividir los documentos en chunks
