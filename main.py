@@ -42,8 +42,9 @@ from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 
 # Importa la herramienta de carga de texto
-from langchain.document_loaders import TextLoader 
-from langchain.text_splitter import CharacterTextSplitter # Recomendado para .tex
+#from langchain.document_loaders import TextLoader 
+#from langchain.text_splitter import CharacterTextSplitter # Recomendado para .tex
+from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
 import os
 
@@ -75,7 +76,7 @@ def load_db(embeddings, path: str):
     
     # 1. Cargar el archivo .tex usando TextLoader
     # TextLoader lee el archivo como texto plano, ignorando la estructura PDF.
-    loader = TextLoader(path)
+    loader = UnstructuredMarkdownLoader(path)
     
     # El método load() devuelve una lista de objetos 'Document'
     documents = loader.load()
@@ -117,7 +118,7 @@ def load_db(embeddings, path: str):
 #    return vectorstore
 
 if not os.path.exists('faiss_index'):
-    vectorstore=load_db(embeddings,'chatbot_guia4.tex') # <- cambiar embedding
+    vectorstore=load_db(embeddings,'chatbot_guia4.md') # <- cambiar embedding
     vectorstore.save_local("faiss_index")
 else:
     vectorstore = FAISS.load_local("faiss_index",embeddings=embeddings,allow_dangerous_deserialization=True)
