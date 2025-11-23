@@ -1,256 +1,225 @@
-#https://python.langchain.com/docs/tutorials/qa_chat_history/
-
-from langchain_core import documents
-#from langchain_ollama import ChatOllama
-from typing import Annotated, Sequence, Literal
-from typing_extensions import TypedDict
-from langchain_core.messages import BaseMessage, HumanMessage
-from langgraph.graph.message import add_messages
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_community.vectorstores import FAISS
-#from PyPDF2 import PdfReader
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains import create_retrieval_chain
-#from langchain.embeddings import OllamaEmbeddings
 import os
-from typing import Annotated, Literal, Sequence, List
-from typing_extensions import TypedDict
-from langchain import hub
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
-from pydantic import BaseModel, Field
-from langgraph.prebuilt import tools_condition
-from langgraph.graph import END, StateGraph, START
-from langgraph.prebuilt import ToolNode
-#from langchain.checkpoint.memory import MemorySaver
-from langgraph.checkpoint.memory import MemorySaver
-import pdfplumber
 import streamlit as st
-from langchain.chains import create_history_aware_retriever
-from langchain_core.prompts import MessagesPlaceholder
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from htmlTemplates import css, bot_template, user_template
-from langchain_groq import ChatGroq
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_community.embeddings import HuggingFaceInstructEmbeddings
-#from InstructorEmbedding import INSTRUCTOR
-#from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
 
-# Importa la herramienta de carga de texto
-from langchain.document_loaders import TextLoader 
-#from langchain.text_splitter import CharacterTextSplitter # Recomendado para .tex
-#from langchain_community.document_loaders import UnstructuredMarkdownLoader
+# --- LangChain/LangGraph/Herramientas ---
+from typing import Annotated, Sequence, List
+from typing_extensions import TypedDict
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langgraph.graph.message import add_messages
+from langgraph.graph import END, StateGraph, START
+from langgraph.checkpoint.memory import MemorySaver
+from langchain_core.documents import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains import create_retrieval_chain, create_history_aware_retriever
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-import os
+# --- Modelos y Embeddings (Google Gemini) ---
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain.document_loaders import TextLoader # Usamos TextLoader para el Markdown limpio
 
+# --- Templates de Streamlit (Asumo que tienes este archivo) ---
+# from htmlTemplates import css, bot_template, user_template 
+# Si no tienes htmlTemplates.py, reemplaza esto con mensajes simples de st.chat_message
+
+# Cargar variables de entorno
 load_dotenv()
 
-api_key= os.getenv('GROQ_API_KEY')
-google_key=os.getenv('GOOGLE_API_KEY')
-# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
+# --- Configuración de Modelos y Embeddings ---
+# Usamos las variables de entorno
+# api_key = os.getenv('GROQ_API_KEY') # No se usa, pero se mantiene para referencia
+google_key = os.getenv('GOOGLE_API_KEY')
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+# Modelos
+# Usa un modelo consistente para el LLM y un modelo consistente para los embeddings
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash") 
+embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001") 
 
-# llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
-
-embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-
-#embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
-
-#Load documents
+# --- FUNCIÓN DE CARGA DE BASE DE DATOS (RAG) ---
 
 def load_db(embeddings, path: str):
     """
-    Carga el contenido del archivo .tex, lo divide en chunks y crea un vectorstore FAISS.
-
-    Args:
-        embeddings: El objeto de embeddings (GoogleGenerativeAIEmbeddings).
-        path (str): La ruta al archivo .tex.
+    Carga el contenido del archivo Markdown limpio, lo divide en chunks y crea un vectorstore FAISS.
     """
-    
-    # 1. Cargar el archivo .tex usando TextLoader
-    # TextLoader lee el archivo como texto plano, ignorando la estructura PDF.
-    #loader = UnstructuredMarkdownLoader(path)
-    loader = TextLoader(path, encoding="utf8")
-    
-    # El método load() devuelve una lista de objetos 'Document'
-    documents = loader.load()
+    try:
+        # 1. Cargar el archivo .md usando TextLoader (ideal para texto plano/Markdown)
+        loader = TextLoader(path, encoding="utf8")
+        documents = loader.load()
 
-    # 2. Inicializar el segmentador de texto
-    # El RecursiveCharacterTextSplitter intentará dividir por párrafos y saltos de línea
-    # (que es una buena aproximación para código LaTeX con saltos de línea lógicos)
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000, 
-        chunk_overlap=150,
-        separators=["\n\n", "\n", " "]
+        # 2. Inicializar el segmentador de texto
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000, 
+            chunk_overlap=150,
+            # Separadores ajustados para Markdown limpio
+            separators=["\n\n", "\n", " "] 
+        )
+        
+        # 3. Dividir los documentos en chunks
+        texts = text_splitter.split_documents(documents)
+
+        # 4. Crear el Vectorstore FAISS
+        vectorstore = FAISS.from_documents(texts, embeddings)
+        st.success(f"Base de datos de {len(texts)} chunks creada exitosamente.")
+        return vectorstore
+        
+    except Exception as e:
+        st.error(f"Error al cargar o crear la base de datos: {e}")
+        st.info("Asegúrate de que el archivo 'guia_calculo_plana.md' existe y el contenido está limpio (sin caracteres complejos de LaTeX).")
+        return None
+
+# --- STREAMLIT: GESTIÓN DE ESTADO Y CARGA ÚNICA ---
+
+# Inicializar historial de chat y base de datos
+if 'chat_history_display' not in st.session_state:
+    st.session_state.chat_history_display = []
+if 'vectorstore' not in st.session_state:
+    st.write("Cargando o creando la base de datos vectorial...")
+    FAISS_INDEX_PATH = "faiss_index"
+    DOCUMENT_PATH = 'guia_calculo_plana.md' # <- Nombre del archivo limpio
+
+    if os.path.exists(FAISS_INDEX_PATH):
+        try:
+            # Carga la BD existente
+            st.session_state.vectorstore = FAISS.load_local(
+                FAISS_INDEX_PATH,
+                embeddings=embeddings,
+                allow_dangerous_deserialization=True
+            )
+            st.success("Base de datos cargada desde el índice 'faiss_index'.")
+        except Exception as e:
+            st.error(f"Error al cargar la BD de FAISS: {e}")
+            st.session_state.vectorstore = None
+    else:
+        # Crea la BD y la guarda
+        st.session_state.vectorstore = load_db(embeddings, DOCUMENT_PATH)
+        if st.session_state.vectorstore:
+            st.session_state.vectorstore.save_local(FAISS_INDEX_PATH)
+            st.success("Base de datos creada y guardada.")
+
+
+# Si la base de datos se cargó correctamente, configurar el retriever
+if st.session_state.vectorstore:
+    retriever = st.session_state.vectorstore.as_retriever()
+
+    # --- CADENAS DE RAG CON HISTORIAL (HISTORY AWARE RETRIEVER) ---
+
+    # 1. Contextualizador de Preguntas
+    contextualize_q_system_prompt = (
+        "Given a chat history and the latest user question "
+        "which might reference context in the chat history, "
+        "formulate a standalone question which can be understood "
+        "without the chat history. Do NOT answer the question, "
+        "just reformulate it if needed and otherwise return it as is."
     )
+    contextualize_q_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", contextualize_q_system_prompt),
+            MessagesPlaceholder("chat_history"),
+            ("human", "{input}"),
+        ]
+    )
+    history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
+
+    # 2. Prompt del Chatbot Tutor
+    system_prompt2 = (
+        "Este documento contiene informacion para ayudar a los estudiantes con la solución a su guia de integrales."
+        "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
+        "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento."  
+        "Usa las directivas de ayuda que se describe al inicio del archivo (No dar la respuesta final, diagnosticar, dar pistas dirigidas)."
+        "Anima al estudiante a pensar y construir la solucion por sı mismo."
+        "Si un estudiante esta completamente perdido, y ya le diste 4 sugerencias o mas, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
+        "\n\n"
+        "Documento de Contexto: {context}"
+    )
+
+    qa_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_prompt2),
+            MessagesPlaceholder("chat_history"),
+            ("human", "{input}"),
+        ]
+    )
+
+    # 3. Cadena de RAG Completa
+    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
+    rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+
+    # --- LANGGRAPH ---
+
+    class State(TypedDict):
+        input: str
+        chat_history: Annotated[Sequence[BaseMessage], add_messages]
+        context: str
+        answer: str
+
+    def call_model(state: State):
+        # La cadena rag_chain requiere 'input' y 'chat_history'
+        response = rag_chain.invoke({"input": state["input"], "chat_history": state["chat_history"]})
+        
+        # Devuelve el nuevo par de mensajes para actualizar el historial de LangGraph
+        return {
+            "chat_history": [
+                HumanMessage(state["input"]),
+                AIMessage(response["answer"]),
+            ],
+            "context": response["context"],
+            "answer": response["answer"],
+        }
+
+    # Definición y compilación del grafo
+    workflow = StateGraph(state_schema=State)
+    workflow.add_edge(START, "model")
+    workflow.add_node("model", call_model)
+    memory = MemorySaver()
+    app = workflow.compile(checkpointer=memory)
     
-    # 3. Dividir los documentos en chunks
-    # documents es una lista de documentos, split_documents divide esos documentos
-    texts = text_splitter.split_documents(documents)
+    # --- STREAMLIT UI ---
 
-    # 4. Crear el Vectorstore FAISS
-    # Usamos FAISS.from_documents ya que 'texts' ahora contiene objetos Document de LangChain
-    vectorstore = FAISS.from_documents(texts, embeddings)
+    st.header('Chatbot MA1028 - Guía Integración')
+
+    # Mensaje inicial
+    if not st.session_state.chat_history_display:
+        st.write("Hola, soy tu tutor de cálculo, ¿en qué problema de la guía te puedo ayudar?")
+
+    question = st.chat_input("Escribe tu pregunta o tu avance en el problema.")
     
-    return vectorstore
+    # Manejar el input del usuario
+    if question:
+        # 1. Configuración de LangGraph (Thread ID único para la sesión)
+        config = {"configurable": {"user_id": "1", "thread_id": "1"}} 
+        
+        # 2. Invocar el grafo con el historial acumulado
+        # LangGraph recupera y gestiona el historial automáticamente gracias al checkpointer (memory)
+        # Solo necesitamos darle el input y el historial almacenado
+        
+        # Reconstruye el historial a partir de los mensajes mostrados (Human/AI)
+        langgraph_history = [
+            m for m in st.session_state.chat_history_display if isinstance(m, (HumanMessage, AIMessage))
+        ]
+        
+        result = app.invoke({"input": question, "chat_history": langgraph_history}, config)
+        
+        # 3. Actualizar el historial de Streamlit para la visualización
+        # El historial de visualización se actualiza con el último par H/A
+        st.session_state.chat_history_display.extend([
+            HumanMessage(content=question),
+            AIMessage(content=result['answer'])
+        ])
 
-# def load_db(embeddings, path):
-#    text =''
+    # 4. Mostrar todo el historial
+    save_chat = ""
+    for message in st.session_state.chat_history_display:
+        save_chat += f"[{'Tú' if isinstance(message, HumanMessage) else 'Bot'}]: {message.content}\n"
+        
+        # Mostrar usando la estructura de chat de Streamlit (o tus templates)
+        with st.chat_message("user" if isinstance(message, HumanMessage) else "assistant"):
+            st.markdown(message.content)
+            
+    # Botón de descarga
+    st.download_button("Descargar chat", save_chat, file_name="chat_tutor.txt")
 
-    #with open(path,'rb') as file:
-    #    pdf_reader = PdfReader(file)
-    #    for page in pdf_reader.pages:
-    #        text += page.extract_text()
-    #        print(text)
-#    with pdfplumber.open(path) as pdf:
-#        for page in pdf.pages:
-#            text += page.extract_text()
-
-#    #text_splitter = SemanticChunker(embeddings, breakpoint_threshold_type="percentile")
-#    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-#    docs = text_splitter.split_text(text)
-#    vectorstore = FAISS.from_texts(docs, embeddings)
-#    return vectorstore
-
-if not os.path.exists('faiss_index'):
-    vectorstore=load_db(embeddings,'chatbot_guia4.md') # <- cambiar embedding
-    vectorstore.save_local("faiss_index")
 else:
-    vectorstore = FAISS.load_local("faiss_index",embeddings=embeddings,allow_dangerous_deserialization=True)
-
-retriever = vectorstore.as_retriever()
-# 2. Incorporate the retriever into a question-answering chain.
-system_prompt1 = (
-    "You are an expert professor for checking answers of students. You do not have to answer questions about the retrieved document."
-    "The students will write a question about the document and their answer. You have to check whether their answer is correct."  
-    "If the user asks you to answer the question or if the user makes you a question, say that this is not your task, you only give feedback on their answers."
-    "Answer always in spanish, please."
-    "\n\n"
-    "{context}"
-)
-system_prompt = (
-    "Este documento contiene informacion para ayudar a los estudiantes con la actividad de Sumas de Riemann."
-    "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
-    "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
-    "Dale pistas y guıas, pero no copies directamente el codigo o las soluciones completas."
-    "Anima al estudiante a pensar y construir la solucion por sı mismo."
-    "Si un estudiante esta completamente perdido, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
-    "\n\n"
-    "{context}"
-)
-system_prompt2 = (
-    "Este documento contiene informacion para ayudar a los estudiantes con la solución a su guia de integrales."
-    "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
-    "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
-    "Usa las directivas de ayuda que se describe al inicio del archivo."
-    "Anima al estudiante a pensar y construir la solucion por sı mismo."
-    "Si un estudiante esta completamente perdido, y ya le diste 4 sugerencias o mas, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
-    "\n\n"
-    "{context}"
-)
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt2), # <- cambiar prompt
-        ("human", "{input}"),
-    ]
-)
-
-question_answer_chain = create_stuff_documents_chain(llm, prompt)
-rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-
-
-contextualize_q_system_prompt = (
-    "Given a chat history and the latest user question "
-    "which might reference context in the chat history, "
-    "formulate a standalone question which can be understood "
-    "without the chat history. Do NOT answer the question, "
-    "just reformulate it if needed and otherwise return it as is."
-)
-
-contextualize_q_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", contextualize_q_system_prompt),
-        MessagesPlaceholder("chat_history"),
-        ("human", "{input}"),
-    ]
-)
-history_aware_retriever = create_history_aware_retriever(
-    llm, retriever, contextualize_q_prompt
-)
-
-qa_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt2), # <- cambiar prompt
-        MessagesPlaceholder("chat_history"),
-        ("human", "{input}"),
-    ]
-)
-
-
-question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-
-from langchain_core.messages import AIMessage, HumanMessage
-
-class State(TypedDict):
-    input: str
-    chat_history: Annotated[Sequence[BaseMessage], add_messages]
-    context: str
-    answer: str
-
-
-def call_model(state: State):
-    response = rag_chain.invoke(state)
-    return {
-        "chat_history": [
-            HumanMessage(state["input"]),
-            AIMessage(response["answer"]),
-        ],
-        "context": response["context"],
-        "answer": response["answer"],
-    }
-
-
-# Our graph consists only of one node:
-workflow = StateGraph(state_schema=State)
-workflow.add_edge(START, "model")
-workflow.add_node("model", call_model)
-
-# Finally, we compile the graph with a checkpointer object.
-# This persists the state, in this case in memory.
-memory = MemorySaver()
-app = workflow.compile(checkpointer=memory)
-
-
-config = {"configurable": {"user_id": "1", "thread_id": "1"}}
-text_contents = "Tu chat:"
-save_chat = ""
-st.header('Chatbot MA1028 - Guía Integración')
-st.write(bot_template.replace("{{MSG}}", "Hola, estoy aquí para ayudarte, ¿Cómo te llamas?"), unsafe_allow_html=True)
-question = st.chat_input("Escribe la pregunta y tu respuesta")
-if question:
-    text_contents=text_contents+"Tu:"+question+"\n"
-    result=app.invoke({"input": question},config)
-    text_contents=text_contents+"Bot:"+result['answer']+"\n"
-    st.write(css, unsafe_allow_html=True)
-    #st.write(bot_template.replace("{{MSG}}", result["answer"]), unsafe_allow_html=True)
-    st.session_state.chat_history = result['chat_history']
-    for i, message in enumerate(st.session_state.chat_history):
-        print(i, message)
-
-        if i % 2 == 0:
-            st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
-            #st.write(message.content)
-        else:
-            st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
-            #st.write(message.content)
-
-save_chat = save_chat+text_contents
-st.download_button("Download tu chat", save_chat)
+    # Mensaje si la base de datos falló
+    st.error("El chatbot no puede iniciar porque la base de datos no se pudo cargar o crear. Revisa la consola para ver los errores de `load_db`.")
