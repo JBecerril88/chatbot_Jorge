@@ -41,6 +41,10 @@ from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 #from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 
+# Importa la herramienta de carga de texto
+from langchain.document_loaders import TextLoader 
+from langchain.text_splitter import CharacterTextSplitter # Recomendado para .tex
+
 import os
 
 load_dotenv()
@@ -59,23 +63,58 @@ embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 
 #Load documents
-def load_db(embeddings, path):
-    text =''
+
+def load_db(embeddings, path: str):
+    """
+    Carga el contenido del archivo .tex, lo divide en chunks y crea un vectorstore FAISS.
+
+    Args:
+        embeddings: El objeto de embeddings (GoogleGenerativeAIEmbeddings).
+        path (str): La ruta al archivo .tex.
+    """
+    
+    # 1. Cargar el archivo .tex usando TextLoader
+    # TextLoader lee el archivo como texto plano, ignorando la estructura PDF.
+    loader = TextLoader(path)
+    
+    # El método load() devuelve una lista de objetos 'Document'
+    documents = loader.load()
+
+    # 2. Inicializar el segmentador de texto
+    # El RecursiveCharacterTextSplitter intentará dividir por párrafos y saltos de línea
+    # (que es una buena aproximación para código LaTeX con saltos de línea lógicos)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, 
+        chunk_overlap=150
+    )
+    
+    # 3. Dividir los documentos en chunks
+    # documents es una lista de documentos, split_documents divide esos documentos
+    texts = text_splitter.split_documents(documents)
+
+    # 4. Crear el Vectorstore FAISS
+    # Usamos FAISS.from_documents ya que 'texts' ahora contiene objetos Document de LangChain
+    vectorstore = FAISS.from_documents(texts, embeddings)
+    
+    return vectorstore
+
+# def load_db(embeddings, path):
+#    text =''
 
     #with open(path,'rb') as file:
     #    pdf_reader = PdfReader(file)
     #    for page in pdf_reader.pages:
     #        text += page.extract_text()
     #        print(text)
-    with pdfplumber.open(path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text()
+#    with pdfplumber.open(path) as pdf:
+#        for page in pdf.pages:
+#            text += page.extract_text()
 
-    #text_splitter = SemanticChunker(embeddings, breakpoint_threshold_type="percentile")
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-    docs = text_splitter.split_text(text)
-    vectorstore = FAISS.from_texts(docs, embeddings)
-    return vectorstore
+#    #text_splitter = SemanticChunker(embeddings, breakpoint_threshold_type="percentile")
+#    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+#    docs = text_splitter.split_text(text)
+#    vectorstore = FAISS.from_texts(docs, embeddings)
+#    return vectorstore
 
 if not os.path.exists('faiss_index'):
     vectorstore=load_db(embeddings,'chatbot_guia4.tex') # <- cambiar embedding
