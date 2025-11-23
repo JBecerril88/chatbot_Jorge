@@ -52,9 +52,9 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 #llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 #llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
 
-embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+#embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
-#embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 
 #Load documents
