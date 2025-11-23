@@ -143,7 +143,7 @@ system_prompt = (
     "{context}"
 )
 system_prompt2 = (
-    "Este documento contiene informacion para ayudar a los estudiantes con la guia de integrales basicas y cambio de variable."
+    "Este documento contiene informacion para ayudar a los estudiantes con la solución a su guia de integrales."
     "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
     "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
     "Usa las directivas de ayuda que se describe al inicio del archivo."
