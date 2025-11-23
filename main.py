@@ -11,6 +11,7 @@ from langgraph.graph import END, StateGraph, START
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain, create_history_aware_retriever
@@ -33,9 +34,11 @@ load_dotenv()
 google_key = os.getenv('GOOGLE_API_KEY')
 
 # Modelos
-# Usa un modelo consistente para el LLM y un modelo consistente para los embeddings
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash") 
-embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001") 
+
+# Embeddings
+# embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001") 
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 # --- FUNCIÓN DE CARGA DE BASE DE DATOS (RAG) ---
 
@@ -177,7 +180,7 @@ if st.session_state.vectorstore:
     
     # --- STREAMLIT UI ---
 
-    st.header('Chatbot MA1028 - Guía Integración')
+    st.header('Chatbot MA1028 - Ayuda para Guía de Integración')
 
     # Mensaje inicial
     if not st.session_state.chat_history_display:
