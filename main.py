@@ -77,7 +77,7 @@ if 'chat_history_display' not in st.session_state:
 if 'vectorstore' not in st.session_state:
     st.write("Cargando o creando la base de datos vectorial...")
     FAISS_INDEX_PATH = "faiss_index"
-    DOCUMENT_PATH = 'guia_calculo_plana.md' # <- Nombre del archivo limpio
+    DOCUMENT_PATH = 'chatbot_guia4.md' # <- Nombre del archivo limpio
 
     if os.path.exists(FAISS_INDEX_PATH):
         try:
