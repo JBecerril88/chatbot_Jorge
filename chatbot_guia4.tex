@@ -1,67 +1,43 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{amsthm}
-\usepackage{amsfonts}
-\usepackage[latin1]{inputenc}
-\usepackage[spanish]{babel}
-\decimalpoint
-\usepackage{setspace}
-\usepackage{cite}
-\usepackage{enumitem}
-\usepackage{anysize}
-\usepackage{bookmark}
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{multicol}
-\usepackage{xcolor}
-\usepackage{tcolorbox}
-\marginsize{1.5cm}{1.5cm}{1.5cm}{1.5cm}
-\date{}
 
-\newcommand{\pista}[1]{\textcolor{blue}{\textbf{Pista:} #1}}
-\newcommand{\paso}[1]{\textcolor{teal}{\textbf{Paso:} #1}}
-
-\begin{document}
 	
 	\begin{tcolorbox}[colback=yellow!10!white, colframe=orange!75!black, title=Directivas para el Chatbot]
 		\textbf{Instrucciones para el chatbot tutor:}
 		\begin{enumerate}
-			\item \textbf{Nunca proporcionar la respuesta final inmediatamente} - Guiar a los estudiantes a través del proceso de resolución con pistas y preguntas.
-			\item \textbf{Diagnosticar dónde está atascado el estudiante} - Hacer preguntas aclaratorias para identificar su dificultad específica (elegir $u$ y $dv$, álgebra, técnica de integración, etc.).
-			\item \textbf{Proporcionar pistas dirigidas, no soluciones} - Sugerir qué técnica usar, recordar fórmulas o señalar ejemplos similares sin resolver los pasos.
+			\item \textbf{Nunca proporcionar la respuesta final inmediatamente} - Guiar a los estudiantes a travÃ©s del proceso de resoluciÃ³n con pistas y preguntas.
+			\item \textbf{Diagnosticar dÃ³nde estÃ¡ atascado el estudiante} - Hacer preguntas aclaratorias para identificar su dificultad especÃ­fica (elegir $u$ y $dv$, Ã¡lgebra, tÃ©cnica de integraciÃ³n, etc.).
+			\item \textbf{Proporcionar pistas dirigidas, no soluciones} - Sugerir quÃ© tÃ©cnica usar, recordar fÃ³rmulas o seÃ±alar ejemplos similares sin resolver los pasos.
 			\item \textbf{Fomentar el trabajo del estudiante} - Pedirles que muestren su intento, luego guiarlos para encontrar sus propios errores o continuar desde donde se detuvieron.
-			\item \textbf{Usar las soluciones solo como referencia} - Verificar el trabajo del estudiante contra estas soluciones, pero revelar pasos progresivamente y solo cuando el estudiante esté verdaderamente atascado.
+			\item \textbf{Usar las soluciones solo como referencia} - Verificar el trabajo del estudiante contra estas soluciones, pero revelar pasos progresivamente y solo cuando el estudiante estÃ© verdaderamente atascado.
 		\end{enumerate}
 	\end{tcolorbox}
 	
 	\vspace{2ex}
 	
 	\begin{center}
-		{\LARGE Guía IV - Soluciones Completas}\par\vspace{1ex}
-		\large Modelación Matemática Fundamental\\
-		\large Profesor: Jorge Antonio Becerril Gómez\\
-		\large Tecnológico de Monterrey
+		{\LARGE GuÃ­a IV - Soluciones Completas}\par\vspace{1ex}
+		\large ModelaciÃ³n MatemÃ¡tica Fundamental\\
+		\large Profesor: Jorge Antonio Becerril GÃ³mez\\
+		\large TecnolÃ³gico de Monterrey
 		\medskip
 		
-		\small Temas: Integración por Partes, Fracciones Parciales\par
+		\small Temas: IntegraciÃ³n por Partes, Fracciones Parciales\par
 	\end{center}
 	
 	\vspace{3ex}
 	
-	\section*{Integración por Partes}
+	\section*{IntegraciÃ³n por Partes}
 	
-	\textbf{Fórmula:} $\displaystyle \int u \, dv = uv - \int v \, du$
+	\textbf{FÃ³rmula:} $\displaystyle \int u \, dv = uv - \int v \, du$
 	
 	\begin{enumerate}
 		
 		\item $\displaystyle \int x^2 \cos(2x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Elige $u = x^2$ (polinomio) y $dv = \cos(2x)dx$ (trigonométrica). Recuerda la prioridad ILATE.}
+		\pista{Elige $u = x^2$ (polinomio) y $dv = \cos(2x)dx$ (trigonomÃ©trica). Recuerda la prioridad ILATE.}
 		
-		\paso{Primera aplicación de integración por partes}
+		\paso{Primera aplicaciÃ³n de integraciÃ³n por partes}
 		\begin{align*}
 			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
 			dv &= \cos(2x) \, dx \quad \Rightarrow \quad v = \frac{1}{2}\sin(2x)
@@ -72,7 +48,7 @@
 			&= \frac{1}{2}x^2 \sin(2x) - \int x\sin(2x) \, dx
 		\end{align*}
 		
-		\paso{Segunda aplicación de integración por partes en $\int x\sin(2x) \, dx$}
+		\paso{Segunda aplicaciÃ³n de integraciÃ³n por partes en $\int x\sin(2x) \, dx$}
 		\begin{align*}
 			u &= x \quad \Rightarrow \quad du = dx\\
 			dv &= \sin(2x) \, dx \quad \Rightarrow \quad v = -\frac{1}{2}\cos(2x)
@@ -97,11 +73,11 @@
 		
 		\item $\displaystyle \int x^2 e^{-2x} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Polinomio por exponencial: usa $u = x^2$, $dv = e^{-2x}dx$. Necesitarás aplicar integración por partes dos veces.}
+		\pista{Polinomio por exponencial: usa $u = x^2$, $dv = e^{-2x}dx$. NecesitarÃ¡s aplicar integraciÃ³n por partes dos veces.}
 		
-		\paso{Primera aplicación}
+		\paso{Primera aplicaciÃ³n}
 		\begin{align*}
 			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
 			dv &= e^{-2x} \, dx \quad \Rightarrow \quad v = -\frac{1}{2}e^{-2x}
@@ -112,7 +88,7 @@
 			&= -\frac{1}{2}x^2 e^{-2x} + \int x e^{-2x} \, dx
 		\end{align*}
 		
-		\paso{Segunda aplicación en $\int x e^{-2x} \, dx$}
+		\paso{Segunda aplicaciÃ³n en $\int x e^{-2x} \, dx$}
 		\begin{align*}
 			u &= x \quad \Rightarrow \quad du = dx\\
 			dv &= e^{-2x} \, dx \quad \Rightarrow \quad v = -\frac{1}{2}e^{-2x}
@@ -138,17 +114,17 @@
 		
 		\item $\displaystyle \int x^2 \ln(2x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Las funciones logarítmicas siempre deben elegirse como $u$ en ILATE. ¿Qué debería ser $dv$?}
+		\pista{Las funciones logarÃ­tmicas siempre deben elegirse como $u$ en ILATE. Â¿QuÃ© deberÃ­a ser $dv$?}
 		
-		\paso{Configurar integración por partes}
+		\paso{Configurar integraciÃ³n por partes}
 		\begin{align*}
 			u &= \ln(2x) \quad \Rightarrow \quad du = \frac{1}{x} \, dx\\
 			dv &= x^2 \, dx \quad \Rightarrow \quad v = \frac{x^3}{3}
 		\end{align*}
 		
-		\paso{Aplicar la fórmula}
+		\paso{Aplicar la fÃ³rmula}
 		\begin{align*}
 			\int x^2 \ln(2x) \, dx &= \ln(2x) \cdot \frac{x^3}{3} - \int \frac{x^3}{3} \cdot \frac{1}{x} \, dx\\
 			&= \frac{x^3}{3}\ln(2x) - \frac{1}{3}\int x^2 \, dx\\
@@ -162,17 +138,17 @@
 		
 		\item $\displaystyle \int x e^{-\frac{x}{2}} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Esto requiere solo una aplicación de integración por partes. Elige $u = x$.}
+		\pista{Esto requiere solo una aplicaciÃ³n de integraciÃ³n por partes. Elige $u = x$.}
 		
-		\paso{Configuración}
+		\paso{ConfiguraciÃ³n}
 		\begin{align*}
 			u &= x \quad \Rightarrow \quad du = dx\\
 			dv &= e^{-\frac{x}{2}} \, dx \quad \Rightarrow \quad v = -2e^{-\frac{x}{2}}
 		\end{align*}
 		
-		\paso{Aplicar la fórmula}
+		\paso{Aplicar la fÃ³rmula}
 		\begin{align*}
 			\int x e^{-\frac{x}{2}} \, dx &= x \cdot \left(-2e^{-\frac{x}{2}}\right) - \int \left(-2e^{-\frac{x}{2}}\right) \, dx\\
 			&= -2x e^{-\frac{x}{2}} + 2\int e^{-\frac{x}{2}} \, dx\\
@@ -187,11 +163,11 @@
 		
 		\item $\displaystyle \int x^2 \sin(x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Similar al problema 1, pero con $\sin(x)$ en lugar de $\cos(2x)$. Aplica integración por partes dos veces.}
+		\pista{Similar al problema 1, pero con $\sin(x)$ en lugar de $\cos(2x)$. Aplica integraciÃ³n por partes dos veces.}
 		
-		\paso{Primera aplicación}
+		\paso{Primera aplicaciÃ³n}
 		\begin{align*}
 			u &= x^2 \quad \Rightarrow \quad du = 2x \, dx\\
 			dv &= \sin(x) \, dx \quad \Rightarrow \quad v = -\cos(x)
@@ -202,7 +178,7 @@
 			&= -x^2 \cos(x) + 2\int x\cos(x) \, dx
 		\end{align*}
 		
-		\paso{Segunda aplicación en $\int x\cos(x) \, dx$}
+		\paso{Segunda aplicaciÃ³n en $\int x\cos(x) \, dx$}
 		\begin{align*}
 			u &= x \quad \Rightarrow \quad du = dx\\
 			dv &= \cos(x) \, dx \quad \Rightarrow \quad v = \sin(x)
@@ -226,11 +202,11 @@
 		
 		\item $\displaystyle \int e^x \sin(x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Este es un caso especial donde obtendrás la integral original de vuelta. Usa integración por partes dos veces y resuelve algebraicamente.}
+		\pista{Este es un caso especial donde obtendrÃ¡s la integral original de vuelta. Usa integraciÃ³n por partes dos veces y resuelve algebraicamente.}
 		
-		\paso{Primera aplicación}
+		\paso{Primera aplicaciÃ³n}
 		\begin{align*}
 			u &= \sin(x) \quad \Rightarrow \quad du = \cos(x) \, dx\\
 			dv &= e^x \, dx \quad \Rightarrow \quad v = e^x
@@ -241,7 +217,7 @@
 			&= e^x \sin(x) - \int e^x \cos(x) \, dx
 		\end{align*}
 		
-		\paso{Segunda aplicación en $\int e^x \cos(x) \, dx$}
+		\paso{Segunda aplicaciÃ³n en $\int e^x \cos(x) \, dx$}
 		\begin{align*}
 			u &= \cos(x) \quad \Rightarrow \quad du = -\sin(x) \, dx\\
 			dv &= e^x \, dx \quad \Rightarrow \quad v = e^x
@@ -270,25 +246,25 @@
 		
 		\item $\displaystyle \int \arcsin(x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
 		\pista{Cuando integras funciones inversas solas, usa $u = \arcsin(x)$ y $dv = dx$.}
 		
-		\paso{Configuración}
+		\paso{ConfiguraciÃ³n}
 		\begin{align*}
 			u &= \arcsin(x) \quad \Rightarrow \quad du = \frac{1}{\sqrt{1-x^2}} \, dx\\
 			dv &= dx \quad \Rightarrow \quad v = x
 		\end{align*}
 		
-		\paso{Aplicar la fórmula}
+		\paso{Aplicar la fÃ³rmula}
 		\begin{align*}
 			\int \arcsin(x) \, dx &= \arcsin(x) \cdot x - \int x \cdot \frac{1}{\sqrt{1-x^2}} \, dx\\
 			&= x\arcsin(x) - \int \frac{x}{\sqrt{1-x^2}} \, dx
 		\end{align*}
 		
-		\paso{Evaluar $\int \frac{x}{\sqrt{1-x^2}} \, dx$ usando sustitución}
+		\paso{Evaluar $\int \frac{x}{\sqrt{1-x^2}} \, dx$ usando sustituciÃ³n}
 		
-		Sea $w = 1-x^2$, entonces $dw = -2x \, dx$, así que $x \, dx = -\frac{1}{2}dw$
+		Sea $w = 1-x^2$, entonces $dw = -2x \, dx$, asÃ­ que $x \, dx = -\frac{1}{2}dw$
 		
 		\begin{align*}
 			\int \frac{x}{\sqrt{1-x^2}} \, dx &= \int \frac{1}{\sqrt{w}} \cdot \left(-\frac{1}{2}\right) \, dw\\
@@ -310,11 +286,11 @@
 		
 		\item $\displaystyle \int_0^1 x \sin(2x) \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Primero encuentra la antiderivada usando integración por partes, luego evalúa en los límites.}
+		\pista{Primero encuentra la antiderivada usando integraciÃ³n por partes, luego evalÃºa en los lÃ­mites.}
 		
-		\paso{Encontrar antiderivada usando integración por partes}
+		\paso{Encontrar antiderivada usando integraciÃ³n por partes}
 		\begin{align*}
 			u &= x \quad \Rightarrow \quad du = dx\\
 			dv &= \sin(2x) \, dx \quad \Rightarrow \quad v = -\frac{1}{2}\cos(2x)
@@ -339,20 +315,20 @@
 		
 		\vspace{2ex}
 		
-		\section*{Integración con Fracciones Parciales}
+		\section*{IntegraciÃ³n con Fracciones Parciales}
 		
-		\textbf{Pasos clave para la descomposición en fracciones parciales:}
+		\textbf{Pasos clave para la descomposiciÃ³n en fracciones parciales:}
 		\begin{enumerate}
-			\item Verificar si el grado del numerador $<$ grado del denominador. Si no, realizar división polinomial primero.
+			\item Verificar si el grado del numerador $<$ grado del denominador. Si no, realizar divisiÃ³n polinomial primero.
 			\item Factorizar el denominador completamente.
 			\item Configurar la forma de fracciones parciales basada en los factores.
-			\item Resolver para las constantes usando varios métodos (cubrir, sustitución, comparar coeficientes).
-			\item Integrar término por término.
+			\item Resolver para las constantes usando varios mÃ©todos (cubrir, sustituciÃ³n, comparar coeficientes).
+			\item Integrar tÃ©rmino por tÃ©rmino.
 		\end{enumerate}
 		
 		\item $\displaystyle \int \frac{1}{x^2 + x - 2} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
 		\pista{Primero factoriza el denominador, luego descompone en fracciones parciales con factores lineales.}
 		
@@ -371,7 +347,7 @@
 			1 = A(x-1) + B(x+2)
 		\end{align*}
 		
-		Método 1 - Sustitución:
+		MÃ©todo 1 - SustituciÃ³n:
 		\begin{itemize}
 			\item Sea $x = 1$: $1 = A(0) + B(3) \Rightarrow B = \frac{1}{3}$
 			\item Sea $x = -2$: $1 = A(-3) + B(0) \Rightarrow A = -\frac{1}{3}$
@@ -391,9 +367,9 @@
 		
 		\item $\displaystyle \int \frac{1}{x^3(1-x)} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{El factor $x^3$ es un factor lineal repetido. Necesitas tres términos para él en la descomposición en fracciones parciales.}
+		\pista{El factor $x^3$ es un factor lineal repetido. Necesitas tres tÃ©rminos para Ã©l en la descomposiciÃ³n en fracciones parciales.}
 		
 		\paso{Configurar fracciones parciales}
 		\begin{align*}
@@ -405,7 +381,7 @@
 			1 = Ax^2(1-x) + Bx(1-x) + C(1-x) + Dx^3
 		\end{align*}
 		
-		\paso{Resolver para las constantes usando sustitución}
+		\paso{Resolver para las constantes usando sustituciÃ³n}
 		\begin{itemize}
 			\item Sea $x = 0$: $1 = C(1) \Rightarrow C = 1$
 			\item Sea $x = 1$: $1 = D(1) \Rightarrow D = 1$
@@ -432,11 +408,11 @@
 		
 		\item $\displaystyle \int \frac{x^2 + 1}{x^2 - 1} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{El grado del numerador es igual al grado del denominador. ¿Qué debes hacer primero?}
+		\pista{El grado del numerador es igual al grado del denominador. Â¿QuÃ© debes hacer primero?}
 		
-		\paso{División polinomial larga}
+		\paso{DivisiÃ³n polinomial larga}
 		
 		Como el grado del numerador $\geq$ grado del denominador, debemos dividir primero:
 		
@@ -444,7 +420,7 @@
 			\frac{x^2 + 1}{x^2 - 1} = 1 + \frac{2}{x^2 - 1}
 		\end{align*}
 		
-		Verificación: $(x^2 - 1) \cdot 1 + 2 = x^2 - 1 + 2 = x^2 + 1$ ?
+		VerificaciÃ³n: $(x^2 - 1) \cdot 1 + 2 = x^2 - 1 + 2 = x^2 + 1$ ?
 		
 		\paso{Factorizar denominador del residuo}
 		\begin{align*}
@@ -478,9 +454,9 @@
 		
 		\item $\displaystyle \int \frac{x^2 - 2}{x(x^2 + 2)} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Tienes un factor lineal ($x$) y un factor cuadrático irreducible ($x^2 + 2$). Usa las formas apropiadas para cada uno.}
+		\pista{Tienes un factor lineal ($x$) y un factor cuadrÃ¡tico irreducible ($x^2 + 2$). Usa las formas apropiadas para cada uno.}
 		
 		\paso{Configurar fracciones parciales}
 		\begin{align*}
@@ -528,7 +504,7 @@
 		
 		\item $\displaystyle \int \frac{3x + 5}{x^2 - x - 2} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
 		\pista{Factoriza el denominador primero, luego usa fracciones parciales con dos factores lineales.}
 		
@@ -566,9 +542,9 @@
 		
 		\item $\displaystyle \int \frac{2x^2 + 3x + 1}{(x-1)(x^2+4)} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Factores mixtos: uno lineal, uno cuadrático irreducible. Configura las fracciones parciales en consecuencia.}
+		\pista{Factores mixtos: uno lineal, uno cuadrÃ¡tico irreducible. Configura las fracciones parciales en consecuencia.}
 		
 		\paso{Configurar fracciones parciales}
 		\begin{align*}
@@ -621,11 +597,11 @@
 		
 		\item $\displaystyle \int \frac{\sec^2 x}{\tan^2 x+3\tan x+2} \, dx$
 		
-		\textbf{Solución:}
+		\textbf{SoluciÃ³n:}
 		
-		\pista{Esto parece complicado, pero observa que $\frac{d}{dx}[\tan x] = \sec^2 x$. ¡Intenta una sustitución!}
+		\pista{Esto parece complicado, pero observa que $\frac{d}{dx}[\tan x] = \sec^2 x$. Â¡Intenta una sustituciÃ³n!}
 		
-		\paso{Usar sustitución}
+		\paso{Usar sustituciÃ³n}
 		
 		Sea $u = \tan x$, entonces $du = \sec^2 x \, dx$
 		
@@ -667,5 +643,3 @@
 		\textbf{Respuesta:} $\displaystyle \boxed{\ln\left|\frac{\tan x+1}{\tan x+2}\right| + C}$
 		
 	\end{enumerate}
-	
-\end{document}
