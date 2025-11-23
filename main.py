@@ -60,7 +60,7 @@ embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 #Load documents
 
- def load_db(embeddings, path):
+def load_db(embeddings, path):
     text =''
 
     #with open(path,'rb') as file:
