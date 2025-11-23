@@ -78,7 +78,7 @@ def load_db(embeddings, path):
     return vectorstore
 
 if not os.path.exists('faiss_index'):
-    vectorstore=load_db(embeddings,'chatbot_guia4.pdf') # <- cambiar pdf
+    vectorstore=load_db(embeddings,'chatbot_guia4.tex') # <- cambiar embedding
     vectorstore.save_local("faiss_index")
 else:
     vectorstore = FAISS.load_local("faiss_index",embeddings=embeddings,allow_dangerous_deserialization=True)
@@ -107,7 +107,7 @@ system_prompt2 = (
     "Este documento contiene informacion para ayudar a los estudiantes con la guia de integrales basicas y cambio de variable."
     "Tu objetivo es guiar a los estudiantes paso a paso sin darles las respuestas completas directamente."
     "Cuando un estudiante te haga una pregunta: identifica en que paso especıfico esta trabajando, proporciona ayuda para ese paso particular usando la informacion de este documento." 
-    "Usa las directivas de ayuda que se describe al inicio del pdf."
+    "Usa las directivas de ayuda que se describe al inicio del archivo."
     "Anima al estudiante a pensar y construir la solucion por sı mismo."
     "Si un estudiante esta completamente perdido, y ya le diste 4 sugerencias o mas, puedes mostrar un paso especıfico y pedirle que intente el siguiente. Contesta siempre en español."
     "\n\n"
